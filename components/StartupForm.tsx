@@ -51,8 +51,6 @@ function StartupForm() {
       if (error instanceof z.ZodError) {
         const errors = error.flatten().fieldErrors;
 
-        console.log("", errors);
-
         toast({
           title: "Error",
           description: "Please, check your inputs and try again",
