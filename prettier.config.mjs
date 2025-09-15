@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   // Optional JSON schema hint (ignored by Prettier at runtime)
   $schema: "https://json.schemastore.org/prettierrc",
 
@@ -71,3 +71,5 @@ module.exports = {
     },
   ],
 };
+
+export default config;
