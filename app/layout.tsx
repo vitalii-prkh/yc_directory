@@ -1,6 +1,7 @@
 import React from "react";
 import type {Metadata} from "next";
 import localFont from "next/font/local";
+import {Toaster} from "@/components/ui/toaster";
 import "./globals.css";
 import "easymde/dist/easymde.min.css";
 
@@ -58,7 +59,10 @@ export const metadata: Metadata = {
 function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
   return (
     <html lang="en">
-      <body className={workSans.variable}>{children}</body>
+      <body className={workSans.variable}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
