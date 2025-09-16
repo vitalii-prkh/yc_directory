@@ -1,13 +1,13 @@
 import React from "react";
 import {sanityFetch, SanityLive} from "@/sanity/lib/live";
-import {STARTUP_QUERY, type StartupQueryData} from "@/sanity/lib/queries";
+import {STARTUPS_QUERY, type StartupsQueryData} from "@/sanity/lib/queries";
 import SearchForm from "@/components/SearchForm";
 import StartupCard from "@/components/StartupCard";
 
 async function Home({searchParams}: {searchParams: Promise<{query?: string}>}) {
   const params = await searchParams;
-  const {data}: {data: StartupQueryData} = await sanityFetch({
-    query: STARTUP_QUERY,
+  const {data}: {data: StartupsQueryData} = await sanityFetch({
+    query: STARTUPS_QUERY,
     params: {
       search: params.query || null,
     },

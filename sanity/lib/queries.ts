@@ -1,7 +1,7 @@
 import {defineQuery} from "next-sanity";
 import type {Author, Startup} from "@/sanity/types";
 
-export type StartupQueryData = StartupPost[];
+export type StartupsQueryData = StartupPost[];
 
 export type StartupPost = Omit<Startup, "author" | "pitch"> & {
   author?: Pick<Author, "_id" | "name" | "image" | "bio">;
@@ -30,7 +30,7 @@ export type StartupPayload = Pick<
   | "pitch"
 >;
 
-export const STARTUP_QUERY =
+export const STARTUPS_QUERY =
   defineQuery(`*[_type == "startup" && defined(slug.current) && !defined($search) || title match $search || category match $search || author->name match $search] | order(_createdAt desc) {
   _id,
   title,
@@ -83,4 +83,33 @@ export const AUTHOR_BY_GITHUB_ID_QUERY =
   email,
   image,
   bio
+}`);
+
+export const AUTHOR_BY_ID_QUERY =
+  defineQuery(`*[_type == "author" && _id == $id][0]{
+  _id,
+  id,
+  name,
+  username,
+  email,
+  image,
+  bio
+}`);
+
+export const STARTUPS_BY_AUTHOR_QUERY =
+  defineQuery(`*[_type == "startup" && author._ref == $id] | order(_createdAt desc) {
+  _id,
+  title,
+  slug,
+  _createdAt,
+  author -> {
+    _id,
+    name,
+    image,
+    bio
+  },
+  views,
+  description,
+  category,
+  image
 }`);

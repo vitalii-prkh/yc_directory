@@ -1,7 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import {LogOut, BadgePlus} from "lucide-react";
 import {auth, signOut, signIn} from "@/auth";
+import {getInitials} from "@/lib/getInitials";
+import {Avatar, AvatarImage, AvatarFallback} from "@/components/ui/avatar";
 
 async function Navbar() {
   const session = await auth();
@@ -22,7 +25,8 @@ async function Navbar() {
           {isSession && (
             <React.Fragment>
               <Link href="/startup/create">
-                <span>Create</span>
+                <span className="max-sm:hidden">Create</span>
+                <BadgePlus className="size-6 sm:hidden" />
               </Link>
               <form
                 action={async () => {
@@ -31,10 +35,21 @@ async function Navbar() {
                   await signOut({redirectTo: "/"});
                 }}
               >
-                <button type="submit">Logout</button>
+                <button type="submit">
+                  <span className="max-sm:hidden">Logout</span>
+                  <LogOut className="size-6 text-red-500 sm:hidden" />
+                </button>
               </form>
               <Link href={`/user/${session?.id}`}>
-                <span>{session?.user?.name}</span>
+                <Avatar className="size-10">
+                  <AvatarImage
+                    src={session?.user?.image || ""}
+                    alt={session?.user?.name || "avatar"}
+                  />
+                  <AvatarFallback>
+                    {getInitials(session?.user?.name || "**")}
+                  </AvatarFallback>
+                </Avatar>
               </Link>
             </React.Fragment>
           )}
