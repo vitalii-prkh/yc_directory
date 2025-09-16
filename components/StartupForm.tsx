@@ -5,12 +5,17 @@ import {useRouter} from "next/navigation";
 import {Send} from "lucide-react";
 import {z} from "zod";
 import {schema} from "@/lib/validation";
+import {createPitch} from "@/lib/actions";
 import {useToast} from "@/hooks/use-toast";
 import {Button} from "@/components/ui/button";
 import InputText from "@/components/InputText";
 import Textarea from "@/components/Textarea";
 import InputMarkdown from "@/components/InputMarkdown";
-import {getInitialState, getInitialErrors} from "@/components/map-values";
+import {
+  getInitialState,
+  getInitialErrors,
+  getInitialValues,
+} from "@/components/map-values";
 
 function StartupForm() {
   const [pitch, setPitch] = React.useState("");
@@ -25,26 +30,26 @@ function StartupForm() {
       description: formData.get("description") as string,
       category: formData.get("category") as string,
       link: formData.get("link") as string,
-      pitch,
+      pitch: formData.get("pitch") as string,
     };
 
     try {
       await schema.parseAsync(values);
-      // const result = await createIdea(values);
-      // console.log(result)
 
-      // if (result.status === "SUCCESS") {
-      //   toast({
-      //     title: "Success",
-      //     description: "Your startup pitch has been created successfully",
-      //   });
-      //
-      //   router.push(`/startup/${result.id}`);
-      // }
+      const result = await createPitch(_, formData);
+
+      if (result.status === "SUCCESS") {
+        toast({
+          title: "Success",
+          description: "Your startup pitch has been created successfully",
+        });
+
+        router.push(`/startup/${result._id}`);
+      }
 
       return {
         status: "success",
-        values,
+        values: getInitialValues(),
         errors: getInitialErrors(),
       };
     } catch (error) {

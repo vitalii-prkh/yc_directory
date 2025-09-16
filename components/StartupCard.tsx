@@ -28,7 +28,7 @@ function StartupCard(props: {post: StartupPost}) {
         </div>
         <Link href={`/user/${post?.author?._id}`}>
           <Image
-            src="https://placehold.co/48x48"
+            src={post?.author?.image || "https://placehold.co/48x48"}
             alt="placeholder"
             width={48}
             height={48}
