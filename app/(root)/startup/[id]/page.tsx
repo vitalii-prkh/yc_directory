@@ -5,9 +5,15 @@ import Image from "next/image";
 import markdownit from "markdown-it";
 import {formatDate} from "@/lib/utils";
 import {client} from "@/sanity/lib/client";
-import {STARTUP_BY_ID_QUERY, type StartupData} from "@/sanity/lib/queries";
+import {
+  PLAYLIST_BY_SLUG_QUERY,
+  STARTUP_BY_ID_QUERY,
+  type StartupData,
+  type PlaylistQueryData,
+} from "@/sanity/lib/queries";
 import {Skeleton} from "@/components/ui/skeleton";
 import View from "@/components/View";
+import StartupCard from "@/components/StartupCard";
 
 export const experimental_ppr = true;
 
@@ -15,9 +21,10 @@ const md = markdownit();
 
 async function Page(props: {params: Promise<{id: string}>}) {
   const params = await props.params;
-  const data = await client.fetch<StartupData>(STARTUP_BY_ID_QUERY, {
-    id: params.id,
-  });
+  const [data, {select}] = await Promise.all([
+    client.fetch<StartupData>(STARTUP_BY_ID_QUERY, {id: params.id}),
+    client.fetch<PlaylistQueryData>(PLAYLIST_BY_SLUG_QUERY, {slug: "temp"}),
+  ]);
 
   if (!data) {
     return notFound();
@@ -70,6 +77,20 @@ async function Page(props: {params: Promise<{id: string}>}) {
           {!parsedContent && <p className="no-result">No details provided</p>}
         </div>
         <hr className="divider" />
+        <div className="mx-auto max-w-4xl">
+          <p className="text-30-semibold">Editor Picks</p>
+          <ul className="card_grid-sm mt-7">
+            {select.length === 0 && (
+              <p className="no-result">No results found</p>
+            )}
+            {select.map((post, index) => (
+              <StartupCard
+                key={index}
+                post={post}
+              />
+            ))}
+          </ul>
+        </div>
         <React.Suspense fallback={<Skeleton className="view-skeleton" />}>
           <View id={data._id} />
         </React.Suspense>
