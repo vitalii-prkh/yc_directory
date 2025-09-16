@@ -18,6 +18,18 @@ export type AuthorQueryData = Pick<
   "_id" | "id" | "name" | "username" | "email" | "image" | "bio"
 >;
 
+export type StartupPayload = Pick<
+  Startup,
+  | "_type"
+  | "title"
+  | "description"
+  | "category"
+  | "image"
+  | "slug"
+  | "author"
+  | "pitch"
+>;
+
 export const STARTUP_QUERY =
   defineQuery(`*[_type == "startup" && defined(slug.current) && !defined($search) || title match $search || category match $search || author->name match $search] | order(_createdAt desc) {
   _id,
