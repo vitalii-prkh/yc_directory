@@ -1,9 +1,11 @@
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {EyeIcon} from "lucide-react";
 import {type StartupPost} from "@/sanity/lib/queries";
-import {formatDate} from "@/lib/utils";
+import {formatDate, cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
+import {Skeleton} from "@/components/ui/skeleton";
 
 function StartupCard(props: {post: StartupPost}) {
   const {post} = props;
@@ -60,3 +62,18 @@ function StartupCard(props: {post: StartupPost}) {
 }
 
 export default StartupCard;
+
+export function StartupCardSkeleton() {
+  return (
+    <React.Fragment>
+      {Array.from({length: 5}).map((_, index) => (
+        <li
+          key={index}
+          className={cn("skeleton", index)}
+        >
+          <Skeleton className="startup-card_skeleton" />
+        </li>
+      ))}
+    </React.Fragment>
+  );
+}
