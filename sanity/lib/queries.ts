@@ -1,5 +1,5 @@
 import {defineQuery} from "next-sanity";
-import type {Author, Startup} from "@/sanity/types";
+import type {Author, Startup, Playlist} from "@/sanity/types";
 
 export type StartupsQueryData = StartupPost[];
 
@@ -29,6 +29,10 @@ export type StartupPayload = Pick<
   | "author"
   | "pitch"
 >;
+
+export type PlaylistQueryData = Pick<Playlist, "_id" | "title" | "slug"> & {
+  select: Array<StartupPost>;
+};
 
 export const STARTUPS_QUERY =
   defineQuery(`*[_type == "startup" && defined(slug.current) && !defined($search) || title match $search || category match $search || author->name match $search] | order(_createdAt desc) {
@@ -112,4 +116,27 @@ export const STARTUPS_BY_AUTHOR_QUERY =
   description,
   category,
   image
+}`);
+
+export const PLAYLIST_BY_SLUG_QUERY =
+  defineQuery(`*[_type == "playlist" && slug.current == $slug][0] {
+  _id,
+  title,
+  slug,
+  select[]-> {
+    _id,
+    _createdAt,
+    title,
+    slug,
+    author -> {
+      _id,
+      name,
+      image,
+      bio
+    },
+    views,
+    description,
+    category,
+    image
+  }
 }`);
